@@ -1,0 +1,23 @@
+{
+    "require": {
+        "league/climate": "^3.7",
+        "mervick/curl-helper": "^2.2",
+        "ext-curl": "*",
+        "ext-zip": "*",
+        "ext-json": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Controller\\": "controllers/",
+            "Lib\\": "lib/"
+        },
+        "classmap": ["lib/"],
+        "files": ["lib/helpers.php"]
+    },
+    "name": "dansleboby/bitname-manager",
+    "description": "",
+    "require-dev": {
+        "symfony/var-dumper": "^5.2"
+    },
+    "minimum-stability": "dev"
+}

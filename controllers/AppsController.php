@@ -36,6 +36,8 @@ class AppsController {
 				$this->climate->error("Can't rename file");
 				exit;
 			}
+
+			$chosen_app = dirname($chosen_app).'/'.substr(basename($chosen_app), 5);
 		}
 
 		$this->climate->clear();

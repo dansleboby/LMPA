@@ -16,6 +16,13 @@ You can custumize ini per installation
 
 > Don't forget to run setup when you run it for the first time
 
+## Screenshot
+
+![image](https://user-images.githubusercontent.com/4716382/156103572-059b9217-c7f0-43ee-b94a-efbf7f6f0cb7.png)
+![image](https://user-images.githubusercontent.com/4716382/156103603-4a6c59a6-575a-45ca-8ee1-1496f54ac0c7.png)
+![image](https://user-images.githubusercontent.com/4716382/156103726-453fbc49-1374-4af1-99c3-4f7917b791a4.png)
+
+
 ## TODO
 - More detailed readme
 - Code review for less duplicate code

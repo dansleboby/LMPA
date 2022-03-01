@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "05086dbbaf23d79535b8ec92e09c5409",
+    "content-hash": "f323793d9622f10c2e6b6096088dd4f3",
     "packages": [
         {
             "name": "league/climate",
@@ -391,12 +391,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/var-dumper.git",
-                "reference": "a0f56a2256ca20e5ebdc7da261569a0238240b6c"
+                "reference": "6efddb1cf6af5270b21c48c6103e81f920c220f0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/var-dumper/zipball/a0f56a2256ca20e5ebdc7da261569a0238240b6c",
-                "reference": "a0f56a2256ca20e5ebdc7da261569a0238240b6c",
+                "url": "https://api.github.com/repos/symfony/var-dumper/zipball/6efddb1cf6af5270b21c48c6103e81f920c220f0",
+                "reference": "6efddb1cf6af5270b21c48c6103e81f920c220f0",
                 "shasum": ""
             },
             "require": {
@@ -457,7 +457,7 @@
                 "dump"
             ],
             "support": {
-                "source": "https://github.com/symfony/var-dumper/tree/5.4"
+                "source": "https://github.com/symfony/var-dumper/tree/v5.4.5"
             },
             "funding": [
                 {
@@ -473,7 +473,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-02-04T18:39:09+00:00"
+            "time": "2022-02-21T15:00:19+00:00"
         }
     ],
     "aliases": [],
@@ -484,8 +484,9 @@
     "platform": {
         "ext-curl": "*",
         "ext-zip": "*",
-        "ext-json": "*"
+        "ext-json": "*",
+        "php": "^7.4"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.1.0"
+    "plugin-api-version": "2.2.0"
 }

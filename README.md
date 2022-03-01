@@ -1,12 +1,15 @@
 # LMPA
 Laragon MultiPHP per App
 
-This tools allow you to run multiple PHP version per app with Laragon, so you can have multiple site running different php vesion.
-You can also custumize the ini per app in .user.ini and through this
-You can install PHP PECL module like YAML and Image Magic
-You can enable and disable native module
-The tools lookup the ini from orginal file and try to apply it, so it better to configure default before add other php version
-You can custumize ini per installation
+- This tools allow you to run multiple PHP version per app with Laragon, so you can have multiple site running different php vesion.
+- You can also custumize the ini per app in .user.ini and through this
+- You can install PHP PECL module like YAML and Image Magic
+- You can enable and disable native module
+- The tools lookup the ini from orginal file and try to apply it, so it better to configure default before add other php version
+- You can custumize ini per installation
+- PHP ini settings compatility check
+- PHP PECL compatilibiliy check
+- Fetch last updates from PHP to get the most recet version of PHP and PECL module
 
 ## Installation
 

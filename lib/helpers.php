@@ -68,3 +68,11 @@ function ini_encodeing(string $key, string $value) {
 	else
 		return $key.'="'.$value.'"'.PHP_EOL;
 }
+
+function removeDirectory($path) {
+	if(PHP_OS === 'WINNT') {
+		exec(sprintf("rd /s /q %s", escapeshellarg($path)));
+	} else {
+		exec(sprintf("rm -rf %s", escapeshellarg($path)));
+	}
+}

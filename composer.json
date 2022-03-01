@@ -4,7 +4,8 @@
         "mervick/curl-helper": "^2.2",
         "ext-curl": "*",
         "ext-zip": "*",
-        "ext-json": "*"
+        "ext-json": "*",
+        "php": "^7.4"
     },
     "autoload": {
         "psr-4": {

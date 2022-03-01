@@ -42,6 +42,7 @@ class AppsController {
 
 		$this->climate->clear();
 		$this->climate->out("All this settings are <red>PER</red> app, so the settings will not affect other app");
+		//TODO: Change ROOT
 		$actions = [
 			"Change PHP version",
 			"Change PHP ini settings",

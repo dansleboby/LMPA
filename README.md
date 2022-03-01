@@ -8,7 +8,13 @@ You can enable and disable native module
 The tools lookup the ini from orginal file and try to apply it, so it better to configure default before add other php version
 You can custumize ini per installation
 
-To use it simply put it in laragon => etc => apps => LMPA => index.phar, after simply call it via php index.phar inside the folder
+## Installation
+
+> Run Laragon at lease one time before running LMPA to let it set it default config :) You could also enable SSL in apache > SSL > enabled, since it required by LMPA
+
+> Extract the release into: C:\laragon\etc\apps\LMPA then double click on LMPA shortcut to run it
+
+> Don't forget to run setup when you run it for the first time
 
 ## TODO
 - More detailed readme

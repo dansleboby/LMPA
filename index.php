@@ -1,5 +1,5 @@
 <?php
-const LMPA_VERSION = '0.2.1';
+const LMPA_VERSION = '0.3.0';
 define("APP_DIRECTORY", dirname(__FILE__));
 
 if(PHP_OS !== "WINNT") exit("Only work on windows");

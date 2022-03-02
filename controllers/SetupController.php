@@ -17,6 +17,19 @@ class SetupController {
 		$this->climate->out("This will allow you the set the inital settings required to have the best experiance with LMPA!");
 		$this->climate->br();
 
+		$this->climate->lightGreen("Check if _aliases folder exists");
+		$_aliases = '..\..\..\bin\php\_aliases';
+		if(!file_exists($_aliases)) {
+			$this->climate->yellow("Not found, try to create-it");
+			if(mkdir($_aliases)) {
+				$this->climate->lightGreen("Created");
+				$this->climate->magenta("Please add " . realpath($_aliases) . " to your PATH to be able to use php74 php80 php56 on cli");
+			} else {
+				$this->climate->red("Fail to create _aliases");
+				exit;
+			}
+		}
+
 		$this->climate->lightGreen("Do you want to install phpMyAdmin?");
 		$choice = menu(["no", "yes"]);
 		if($choice === "1") {

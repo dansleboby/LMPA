@@ -115,11 +115,12 @@ class PHPVersionsController {
 
 		//TODO: Dynamic list
 		$lists = [
-			"5.5.38" => ["path" => "releases/archives/php-5.5.38-nts-Win32-VC11-x64.zip", "sha256" => "ABDF2FEFCD7D1DAF75D689E309E8571879B15D4B61726546E4E064F96167387A"],
-			"5.6.40" => ["path" => "releases/archives/php-5.6.40-nts-Win32-VC11-x64.zip", "sha256" => "3D7668280FA4B16F70705539BA1E4EA17EEF344C81E82881CBECA26FB7F181F1"],
-			"7.0.33" => ["path" => "releases/archives/php-7.0.33-nts-Win32-VC14-x64.zip", "sha256" => "BBA39BDE5B0BD50EFADC11E2716C7528669945F9D1397D707486E401E67E89FB"],
-			"7.1.33" => ["path" => "releases/archives/php-7.1.33-nts-Win32-VC14-x64.zip", "sha256" => "071438BE5BBAEE8B34894DDBA7852B6040991A3C853AB8141EFCB1B6655BBBEF"],
-			"7.2.34" => ["path" => "releases/archives/php-7.2.34-nts-Win32-VC15-x64.zip", "sha256" => "3C673EAB656E26FD6BC3AD27FE71169AD888B04E21D63D3C6B3151D5ED216563"]
+			"5.5.38" => ["path" => "archives/php-5.5.38-nts-Win32-VC11-x64.zip", "sha256" => "ABDF2FEFCD7D1DAF75D689E309E8571879B15D4B61726546E4E064F96167387A"],
+			"5.6.40" => ["path" => "archives/php-5.6.40-nts-Win32-VC11-x64.zip", "sha256" => "3D7668280FA4B16F70705539BA1E4EA17EEF344C81E82881CBECA26FB7F181F1"],
+			"7.0.33" => ["path" => "archives/php-7.0.33-nts-Win32-VC14-x64.zip", "sha256" => "BBA39BDE5B0BD50EFADC11E2716C7528669945F9D1397D707486E401E67E89FB"],
+			"7.1.33" => ["path" => "archives/php-7.1.33-nts-Win32-VC14-x64.zip", "sha256" => "071438BE5BBAEE8B34894DDBA7852B6040991A3C853AB8141EFCB1B6655BBBEF"],
+			"7.2.34" => ["path" => "archives/php-7.2.34-nts-Win32-VC15-x64.zip", "sha256" => "3C673EAB656E26FD6BC3AD27FE71169AD888B04E21D63D3C6B3151D5ED216563"],
+			"7.3.33" => ["path" => "archives/php-7.3.33-nts-Win32-VC15-x64.zip", "sha256" => "5EAF3CAD80E678623F222A42C99BCEFCC60EEA359D407FB51E805AFDB3B13E5E"]
 		];
 
 		foreach($lists as $version => $path) {
@@ -175,7 +176,7 @@ class PHPVersionsController {
 			ksort($archives_versions[$major][$minor]);
 			$patch = menu(array_combine(array_keys($archives_versions[$major][$minor]), array_map(function($v) use ($major, $minor) { return "PHP $major.$minor.<blue>$v</blue>"; }, array_keys($archives_versions[$major][$minor]))));
 
-			$packages["other"]["path"] = $archives_versions[$major][$minor][$patch];
+			$packages["other"] = ['path' => substr($archives_versions[$major][$minor][$patch], 20) ];
 		}
 
 		$this->climate->info("Start download\n");
@@ -199,7 +200,7 @@ class PHPVersionsController {
 			$this->climate->info(hash("sha256", $file['content']));
 			$this->climate->info($packages[$choice]['sha256']);
 
-			if(hash("sha256", $file['content']) === $packages[$choice]['sha256']) {
+			if(hash("sha256", $file['content']) === strtolower($packages[$choice]['sha256'])) {
 				$this->climate->lightGreen("Download is OK");
 			} else {
 				$this->climate->error("Download have fail");
@@ -239,6 +240,10 @@ class PHPVersionsController {
 		//Copy ini
 		$this->climate->info("Copy ini file ".realpath($target_dir)."/php.ini-production to ".realpath($target_dir)."/php.ini");
 		copy($target_dir."/php.ini-production", $target_dir."/php.ini");
+
+		$this->climate->info("Add batch alias");
+		$_aliases = '..\..\..\bin\php\_aliases';
+		file_put_contents($_aliases.'\php'.implode('', array_slice(explode('.', $matches[1]), 0, 2)).'.bat', "@echo off\n".realpath($target_dir)."\php.exe %*");
 
 		$this->climate->clear();
 

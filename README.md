@@ -17,6 +17,8 @@ Laragon MultiPHP per App
 
 > Extract the release into: C:\laragon\etc\apps\LMPA then double click on LMPA shortcut to run it
 
+> Add C:\laragon\bin\php\_aliases in your PATH for cli php, you will get access to php54 php70 php71 etc... for each version you add 
+
 > Don't forget to run setup when you run it for the first time
 
 ## Screenshot

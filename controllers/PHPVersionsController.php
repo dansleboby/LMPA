@@ -56,10 +56,22 @@ class PHPVersionsController {
 
 		//TODO: Check in vhosts for current usage
 		$directory = realpath("../../../bin/php/".substr($choice, 2)."-nts/");
-		exec(sprintf("rd /s /q %s", escapeshellarg($directory)));
+		removeDirectory($directory);
 		if(file_exists($directory)) {
 			$this->climate->error("Cannot delete the php versions");
 			exit;
+		} else {
+			$this->climate->lightGreen("Base binary removed");
+		}
+
+		//Remove alias
+		$_aliases = '..\..\..\bin\php\_aliases';
+		$file = $_aliases.'\php'.implode('', array_slice(explode('.', substr($choice, 2)), 0, 2)).'.bat';
+		if(!unlink($file)) {
+			$this->climate->error("Can't remove alias, $file");
+			exit;
+		} else {
+			$this->climate->lightGreen("Alias removed!");
 		}
 
 		$this->climate->info("PHP " . $choice . " has been deleted");

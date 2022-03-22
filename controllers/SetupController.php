@@ -28,6 +28,17 @@ class SetupController {
 				$this->climate->red("Fail to create _aliases");
 				exit;
 			}
+
+			$this->climate->out("Composer setup");
+			copy('https://getcomposer.org/installer', $_aliases.DIRECTORY_SEPARATOR.'composer-setup.php');
+			if (hash_file('sha384', 'composer-setup.php') === '906a84df04cea2aa72f40b5f787e49f22d4c2f19492ac310e8cba5b96ac8b64115ac402c8cd292b8a03482574915d1a8') {
+				$this->climate->lightGreen('Installer verified');
+			} else {
+				$this->climate->error('Installer corrupt');
+				unlink($_aliases.DIRECTORY_SEPARATOR.'composer-setup.php');
+				exit;
+			}
+			require_once $_aliases.DIRECTORY_SEPARATOR.'composer-setup.php';
 		}
 
 		$this->climate->lightGreen("Do you want to install phpMyAdmin?");

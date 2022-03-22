@@ -74,6 +74,14 @@ class PHPVersionsController {
 			$this->climate->lightGreen("Alias removed!");
 		}
 
+		$file = $_aliases.'\composer'.implode('', array_slice(explode('.', substr($choice, 2)), 0, 2)).'.bat';
+		if(!unlink($file)) {
+			$this->climate->error("Can't remove alias, $file");
+			exit;
+		} else {
+			$this->climate->lightGreen("Alias removed!");
+		}
+
 		$this->climate->info("PHP " . $choice . " has been deleted");
 	}
 
@@ -256,6 +264,7 @@ class PHPVersionsController {
 		$this->climate->info("Add batch alias");
 		$_aliases = '..\..\..\bin\php\_aliases';
 		file_put_contents($_aliases.'\php'.implode('', array_slice(explode('.', $matches[1]), 0, 2)).'.bat', "@echo off\n".realpath($target_dir)."\php.exe %*");
+		file_put_contents($_aliases."\composer".implode('', array_slice(explode('.', $matches[1]), 0, 2)).'.bat', str_replace(' %*', ' C:\laragon\bin\php\_aliases\composer.phar %*', "@echo off\n".realpath($target_dir)."\php.exe %*"));
 
 		$this->climate->clear();
 

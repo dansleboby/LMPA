@@ -109,8 +109,12 @@ class PHPPECLModulesController {
 				for ($i = 0; $i < $zipArchive->numFiles; $i++) {
 					$filename = $zipArchive->getNameIndex($i);
 
-					if($filename === "php_".$myPackage.".dll") {
-						file_put_contents($phpFolder.'ext/'."php_".$myPackage.".dll", $zipArchive->getFromIndex($i));
+					//Fix DDL not match the name
+					$packageFilename = $myPackage;
+					if($packageFilename === "pecl_http") $packageFilename = "http";
+
+					if($filename === "php_".$packageFilename.".dll") {
+						file_put_contents($phpFolder.'ext/'."php_".$packageFilename.".dll", $zipArchive->getFromIndex($i));
 					}
 
 					if(basename($filename) === $filename && pathinfo($filename, PATHINFO_EXTENSION) === "dll") {
@@ -129,7 +133,7 @@ class PHPPECLModulesController {
 			}
 
 			$this->climate->out("Add extensions to ini");
-			file_put_contents($iniFile, file_get_contents($iniFile).PHP_EOL."extension=$myPackage");
+			file_put_contents($iniFile, file_get_contents($iniFile).PHP_EOL."extension=$packageFilename");
 
 			$this->climate->lightGreen()->blink("Done!");
 		}

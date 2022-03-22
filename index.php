@@ -1,11 +1,13 @@
 <?php
-const LMPA_VERSION = '0.3.1';
+const LMPA_VERSION = '0.3.2';
 define("APP_DIRECTORY", dirname(__FILE__));
 
 if(PHP_OS !== "WINNT") exit("Only work on windows");
 
 ini_set('max_execution_time', '-1');
 require_once('vendor/autoload.php');
+$bugsnag = Bugsnag\Client::make('279c41fe0baa7abbf7d0014d9f369262');
+Bugsnag\Handler::register($bugsnag);
 
 $climate = new League\CLImate\CLImate;
 $climate->extend(['ctable' => \Lib\CompactTable::class]);

@@ -46,7 +46,7 @@ class PHPVersionsController {
 		$this->climate->clear();
 		//Find all current php version
 		$apache2_mod_php = file_get_contents("../../../etc/apache2/mod_php.conf");
-		preg_match('#LoadModule php[5-9]_module "(.*)"#Ums', $apache2_mod_php, $matches);
+		preg_match('#LoadModule php[5-9]?_module "(.*)"#Ums', $apache2_mod_php, $matches);
 		$php_default_binary = dirname($matches[1]).DIRECTORY_SEPARATOR."php.exe";
 
 		$this->climate->lightYellow("Default php version: v". exeparser_fileversion($php_default_binary));
@@ -110,7 +110,7 @@ class PHPVersionsController {
 
 		//Find all current php version
 		$apache2_mod_php = file_get_contents("../../../etc/apache2/mod_php.conf");
-		preg_match('#LoadModule php[5-9]_module "(.*)"#Ums', $apache2_mod_php, $matches);
+		preg_match('#LoadModule php[5-9]?_module "(.*)"#Ums', $apache2_mod_php, $matches);
 		$php_default_binary = dirname($matches[1]).DIRECTORY_SEPARATOR."php.exe";
 		$sourceIni = dirname($matches[1]).DIRECTORY_SEPARATOR."php.ini";
 

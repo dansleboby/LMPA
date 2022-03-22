@@ -52,13 +52,13 @@ class PECL {
 			$packages[$package] = $tmp;
 		}
 
-		file_put_contents("pecl.json", json_encode(['version' => time(), 'packages' => $packages]));
+		file_put_contents(path("pecl.json"), json_encode(['version' => time(), 'packages' => $packages]));
 
 		$this->climate->info("Done!");
 	}
 
 	public static function getDatabase() {
-		if(!file_exists("pecl.json")) return [];
-		return json_decode(file_get_contents("pecl.json"), true);
+		if(!file_exists(path("pecl.json"))) return [];
+		return json_decode(file_get_contents(path("pecl.json")), true);
 	}
 }

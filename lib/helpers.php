@@ -76,3 +76,7 @@ function removeDirectory($path) {
 		exec(sprintf("rm -rf %s", escapeshellarg($path)));
 	}
 }
+
+function path($path) {
+	return strlen(Phar::running()) > 0 ? 'phar://index.phar/'.$path : $path;
+}

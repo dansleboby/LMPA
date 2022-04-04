@@ -17,29 +17,10 @@ class SetupController {
 		$this->climate->out("This will allow you the set the inital settings required to have the best experiance with LMPA!");
 		$this->climate->br();
 
-		$this->climate->lightGreen("Check if _aliases folder exists");
-		$_aliases = '..\..\..\bin\php\_aliases';
-		if(!file_exists($_aliases)) {
-			$this->climate->yellow("Not found, try to create-it");
-			if(mkdir($_aliases)) {
-				$this->climate->lightGreen("Created");
-				$this->climate->magenta("Please add " . realpath($_aliases) . " to your PATH to be able to use php74 php80 php56 on cli");
-			} else {
-				$this->climate->red("Fail to create _aliases");
-				exit;
-			}
-
-			$this->climate->out("Composer setup");
-			copy('https://getcomposer.org/installer', $_aliases.DIRECTORY_SEPARATOR.'composer-setup.php');
-			if (hash_file('sha384', 'composer-setup.php') === '906a84df04cea2aa72f40b5f787e49f22d4c2f19492ac310e8cba5b96ac8b64115ac402c8cd292b8a03482574915d1a8') {
-				$this->climate->lightGreen('Installer verified');
-			} else {
-				$this->climate->error('Installer corrupt');
-				unlink($_aliases.DIRECTORY_SEPARATOR.'composer-setup.php');
-				exit;
-			}
-			require_once $_aliases.DIRECTORY_SEPARATOR.'composer-setup.php';
-		}
+		$this->climate->out('Make sure you have enabled SSL in Apache => SSL => Enable!');
+		$this->climate->out('SSL is enabled?');
+		if(menu(['No', 'Yes']) == "0")
+			exit;
 
 		$this->climate->lightGreen("Do you want to install phpMyAdmin?");
 		$choice = menu(["no", "yes"]);
@@ -134,6 +115,33 @@ class SetupController {
 			}
 
 			$this->climate->lightGreen("PHP My Admin is now availible at http://127.0.0.1/phpMyAdmin");
+
+
+			$this->climate->lightGreen("Check if _aliases folder exists");
+			$_aliases = '..\..\..\bin\php\_aliases';
+			if(!file_exists($_aliases)) {
+				$this->climate->yellow("Not found, try to create-it");
+				if(mkdir($_aliases)) {
+					$this->climate->lightGreen("Created");
+					$this->climate->magenta("Please add " . realpath($_aliases) . " to your PATH to be able to use php74 php80 php56 on cli");
+				} else {
+					$this->climate->red("Fail to create _aliases");
+					exit;
+				}
+
+				$this->climate->out("Composer setup");
+				copy('https://getcomposer.org/installer', $_aliases.DIRECTORY_SEPARATOR.'composer-setup.php');
+				if (hash_file('sha384', $_aliases.DIRECTORY_SEPARATOR.'composer-setup.php') === '906a84df04cea2aa72f40b5f787e49f22d4c2f19492ac310e8cba5b96ac8b64115ac402c8cd292b8a03482574915d1a8') {
+					$this->climate->lightGreen('Installer verified');
+				} else {
+					$this->climate->error('Installer corrupt');
+					unlink($_aliases.DIRECTORY_SEPARATOR.'composer-setup.php');
+					exit;
+				}
+
+				$argv = ['index.php', '--install-dir='.$_aliases];
+				require_once $_aliases.DIRECTORY_SEPARATOR.'composer-setup.php';
+			}
 		}
 
 		//Check if SSL is enabled

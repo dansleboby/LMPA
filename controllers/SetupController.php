@@ -131,12 +131,12 @@ class SetupController {
 
 				$this->climate->out("Composer setup");
 				copy('https://getcomposer.org/installer', $_aliases.DIRECTORY_SEPARATOR.'composer-setup.php');
-				if (hash_file('sha384', $_aliases.DIRECTORY_SEPARATOR.'composer-setup.php') === '906a84df04cea2aa72f40b5f787e49f22d4c2f19492ac310e8cba5b96ac8b64115ac402c8cd292b8a03482574915d1a8') {
+				$exceptedSum = file_get_contents('https://composer.github.io/installer.sig');
+				if (hash_file('sha384', $_aliases.DIRECTORY_SEPARATOR.'composer-setup.php') === $exceptedSum) {
 					$this->climate->lightGreen('Installer verified');
 				} else {
 					$this->climate->error('Installer corrupt');
 					unlink($_aliases.DIRECTORY_SEPARATOR.'composer-setup.php');
-					exit;
 				}
 
 				$argv = ['index.php', '--install-dir='.$_aliases];

@@ -26,11 +26,11 @@ class PHPIniController {
 					"opcache.jit_prof_threshold",
 					"opcache.jit_max_root_traces",
 					"opcache.jit_max_side_traces",
-					"opcache.jit_max_exit_counters",
+					"opcache.jit_max_return_counters",
 					"opcache.jit_hot_loop",
 					"opcache.jit_hot_func",
 					"opcache.jit_hot_return",
-					"opcache.jit_hot_side_exit",
+					"opcache.jit_hot_side_return",
 					"opcache.jit_blacklist_root_trace",
 					"opcache.jit_blacklist_side_trace",
 					"opcache.jit_max_loop_unrolls",
@@ -265,7 +265,7 @@ class PHPIniController {
 		$choice = menu(["No", "Yes"], 1);
 
 		if($choice == 0) {
-			exit;
+			return;
 		}
 
 		$this->climate->clear();
@@ -303,7 +303,7 @@ class PHPIniController {
 
 		$choice = menu(["No", "Yes"], 1);
 		if($choice == 0)
-			exit;
+			return;
 
 		$this->climate->clear();
 

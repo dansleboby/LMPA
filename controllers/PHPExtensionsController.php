@@ -32,7 +32,7 @@ class PHPExtensionsController
 
         if (empty($versions)) {
             $this->climate->yellow("No versions...");
-            exit;
+            return;
         }
 
         foreach ($versions as $n => $version) {
@@ -61,7 +61,7 @@ class PHPExtensionsController
         if (empty($token)) {
             $this->climate->error("API token not configured. Please run Initial Setup to set your phpext.phptools.online API token.");
             $this->climate->error("Get your token at: https://phpext.phptools.online/account/api-token");
-            exit;
+            return;
         }
 
         $phpExt = new PhpExt($token);
@@ -72,7 +72,7 @@ class PHPExtensionsController
 
         if (version_compare($phpMajorMinor, '7.0', '<')) {
             $this->climate->error("PHP $phpMajorMinor is too old. The extension repository only supports PHP 7.0+");
-            exit;
+            return;
         }
 
         $this->climate->out("Search for a PHP extension to install (for PHP $phpMajorMinor):");
@@ -89,12 +89,12 @@ class PHPExtensionsController
             if (!empty($results['curl_error'])) {
                 $this->climate->error("cURL: " . $results['curl_error']);
             }
-            exit;
+            return;
         }
 
         if (empty($results['result'])) {
             $this->climate->yellow("No extensions found matching '$query' for PHP $phpMajorMinor");
-            exit;
+            return;
         }
 
         // Build menu from results
@@ -129,7 +129,7 @@ class PHPExtensionsController
             if (!empty($file['error'])) {
                 $this->climate->error("Error: " . $file['error']);
             }
-            exit;
+            return;
         }
 
         $zipName = "php_{$selected['extName']}-{$selected['extVersion']}.zip";
@@ -171,7 +171,7 @@ class PHPExtensionsController
             unlink($zipName);
         } else {
             $this->climate->error("Error when extracting the archive");
-            exit;
+            return;
         }
 
         $this->climate->out("Add extensions to ini");
@@ -188,7 +188,7 @@ class PHPExtensionsController
 
         if (!isset($currentIni["extension"]) || empty($currentIni["extension"])) {
             $this->climate->yellow("No extensions installed");
-            exit;
+            return;
         }
 
         $currentExtensions = $currentIni["extension"];
@@ -206,7 +206,7 @@ class PHPExtensionsController
         $dllPath = '../../../bin/php/' . substr($php_version, 2) . '-nts/ext/' . "php_" . $myPackage . ".dll";
         if (file_exists($dllPath) && !unlink($dllPath)) {
             $this->climate->red("Can't remove DLL");
-            exit;
+            return;
         }
 
         $this->climate->lightGreen()->blink("Done!");

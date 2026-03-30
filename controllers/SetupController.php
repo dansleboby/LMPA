@@ -20,7 +20,7 @@ class SetupController {
 		$this->climate->out('Make sure you have enabled SSL in Apache => SSL => Enable!');
 		$this->climate->out('SSL is enabled?');
 		if(menu(['No', 'Yes']) == "0")
-			exit;
+			return;
 
 		$this->climate->lightGreen("Do you want to install phpMyAdmin?");
 		$choice = menu(["no", "yes"]);
@@ -36,14 +36,14 @@ class SetupController {
 								   "yes"
 							   ]);
 				if($choice === "0") {
-					exit;
+					return;
 				} else {
 					removeDirectory($target_dir);
 					if(!file_exists($target_dir)) {
 						$this->climate->lightGreen("$target_dir was erased");
 					} else {
 						$this->climate->error("Can't remove $target_dir, please try to remove it manualy and restart utils");
-						exit;
+						return;
 					}
 				}
 			}
@@ -72,7 +72,7 @@ class SetupController {
 				$this->climate->lightGreen("Download is OK");
 			} else {
 				$this->climate->error("Download have fail");
-				exit;
+				return;
 			}
 
 			$this->climate->info("Put file in temp...");
@@ -91,27 +91,27 @@ class SetupController {
 				unlink(basename($url));
 			} else {
 				$this->climate->error("Error when extarting the archive");
-				exit;
+				return;
 			}
 
 			$currentPMADirectory = glob('..\..\..\etc\apps\phpMyAdmin-*', GLOB_ONLYDIR);
 			if(count($currentPMADirectory) !== 1) {
 				$this->climate->error("Can't find the tmp folder of PMA...");
-				exit;
+				return;
 			}
 			$currentPMADirectory = $currentPMADirectory[0];
 			
 			$this->climate->out("Rename directory " . $currentPMADirectory . " to " . $target_dir);
 			if(!rename($currentPMADirectory, $target_dir)) {
 				$this->climate->error("Can't rename " . $currentPMADirectory . " to " . $target_dir);
-				exit;
+				return;
 			}
 
 			//Copy ini
 			$this->climate->info("Copy config file " . $target_dir . "/config.sample.inc.php to " . $target_dir . "/config.sample.inc.php");
 			if(!copy($target_dir . "/config.sample.inc.php", $target_dir . "/config.inc.php")) {
 				$this->climate->error("Can't copy config file!");
-				exit;
+				return;
 			}
 
 			$this->climate->lightGreen("PHP My Admin is now availible at http://127.0.0.1/phpMyAdmin");
@@ -126,7 +126,7 @@ class SetupController {
 					$this->climate->magenta("Please add " . realpath($_aliases) . " to your PATH to be able to use php74 php80 php56 on cli");
 				} else {
 					$this->climate->red("Fail to create _aliases");
-					exit;
+					return;
 				}
 
 				$this->climate->out("Composer setup");
@@ -150,7 +150,7 @@ class SetupController {
 		if(!array_key_exists('SSLEnabled', $laragonIni['apache']) || $laragonIni['apache']['SSLEnabled'] === "0") {
 			$this->climate->error("Please enabled ssl NOW in apache => ssl => enabled");
 			$this->climate->error("Restrat the setup after");
-			exit;
+			return;
 		} else {
 			$this->climate->lightGreen("Apache SSL is enabled :)");
 		}
@@ -162,21 +162,21 @@ class SetupController {
 		//TODO: Handle multiple httpd versions
 		if(count($apacheDirectory) !== 1) {
 			$this->climate->error("Can't find the apache folder");
-			exit;
+			return;
 		}
 		$apacheDirectory = $apacheDirectory[0];
 
 		$this->climate->out("Copy: ".APP_DIRECTORY.DIRECTORY_SEPARATOR."mod_fcgid.so into " . $apacheDirectory.DIRECTORY_SEPARATOR."modules");
 		if(!copy(APP_DIRECTORY.DIRECTORY_SEPARATOR."mod_fcgid.so", $apacheDirectory.DIRECTORY_SEPARATOR."modules".DIRECTORY_SEPARATOR."mod_fcgid.so")) {
 			$this->climate->error("Impossible to copy the file");
-			exit;
+			return;
 		}
 
 		$this->climate->out("Adding module to $apacheDirectory/conf/httpd.conf");
 		$apacheConfFile = $apacheDirectory.DIRECTORY_SEPARATOR.'conf'.DIRECTORY_SEPARATOR.'httpd.conf';
 		if(!file_put_contents($apacheConfFile, file_get_contents($apacheConfFile).PHP_EOL.'LoadModule fcgid_module modules/mod_fcgid.so')) {
 			$this->climate->error("Can't write the change to the config file");
-			exit;
+			return;
 		}
 
 		$this->climate->br(3);

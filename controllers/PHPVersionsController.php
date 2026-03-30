@@ -30,7 +30,7 @@ class PHPVersionsController {
 
 		if(empty($versions)) {
 			$this->climate->yellow("No other versions...");
-			exit;
+			return;
 		}
 
 		foreach($versions as $n => $version) {
@@ -59,7 +59,7 @@ class PHPVersionsController {
 		removeDirectory($directory);
 		if(file_exists($directory)) {
 			$this->climate->error("Cannot delete the php versions");
-			exit;
+			return;
 		} else {
 			$this->climate->lightGreen("Base binary removed");
 		}
@@ -69,7 +69,7 @@ class PHPVersionsController {
 		$file = $_aliases.'\php'.implode('', array_slice(explode('.', substr($choice, 2)), 0, 2)).'.bat';
 		if(!unlink($file)) {
 			$this->climate->error("Can't remove alias, $file");
-			exit;
+			return;
 		} else {
 			$this->climate->lightGreen("Alias removed!");
 		}
@@ -77,7 +77,7 @@ class PHPVersionsController {
 		$file = $_aliases.'\composer'.implode('', array_slice(explode('.', substr($choice, 2)), 0, 2)).'.bat';
 		if(!unlink($file)) {
 			$this->climate->error("Can't remove alias, $file");
-			exit;
+			return;
 		} else {
 			$this->climate->lightGreen("Alias removed!");
 		}
@@ -104,7 +104,7 @@ class PHPVersionsController {
 			if(!empty($content["error"])) {
 				$this->climate->error("cURL error (" . $content["errno"] . "): " . $content["error"]);
 			}
-			die();
+			return;
 		}
 		$last_releases = $content["data"];
 
@@ -177,7 +177,7 @@ class PHPVersionsController {
 				if(!empty($content["error"])) {
 					$this->climate->error("cURL error (" . $content["errno"] . "): " . $content["error"]);
 				}
-				die();
+				return;
 			}
 
 			preg_match_all('/<a href="(?<url>\/downloads\/releases\/archives\/php-(?<version>[0-9.]+)-nts.*)">/Ui', $content['content'], $archives);
@@ -232,7 +232,7 @@ class PHPVersionsController {
 				$this->climate->lightGreen("Download is OK");
 			} else {
 				$this->climate->error("Download have fail");
-				exit;
+				return;
 			}
 		}
 
@@ -246,7 +246,7 @@ class PHPVersionsController {
 		$this->climate->info("Check if $target_dir exists...");
 		if(file_exists($target_dir)) {
 			$this->climate->error("Error $target_dir is present\n");
-			exit;
+			return;
 		}
 
 		$this->climate->info("Extraction of download file");
@@ -262,7 +262,7 @@ class PHPVersionsController {
 			unlink(basename($packages[$choice]['path']));
 		} else {
 			$this->climate->error("Error when extarting the archive");
-			exit;
+			return;
 		}
 
 		//Copy ini

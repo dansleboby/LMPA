@@ -30,11 +30,11 @@ class AppsController {
 
 		if(strpos(basename($chosen_app), 'auto.') === 0) {
 			$this->climate->yellow("Attention this will convert this app to be used with LMAP, the change in laragon will no longer take place for the app");
-			if(menu(['No', 'Yes']) === "0") exit;
+			if(menu(['No', 'Yes']) === "0") return;
 
 			if(!rename($chosen_app,  dirname($chosen_app).'/'.substr(basename($chosen_app), 5))) {
 				$this->climate->error("Can't rename file");
-				exit;
+				return;
 			}
 
 			$chosen_app = dirname($chosen_app).'/'.substr(basename($chosen_app), 5);
@@ -91,7 +91,7 @@ class AppsController {
 
 			if(empty($versions)) {
 				$this->climate->yellow("No other versions...");
-				exit;
+				return;
 			}
 
 			foreach($versions as $n => $version) {
@@ -165,7 +165,7 @@ class AppsController {
 		if($action === '1') {
 			if(!$lmpa_present || !isset($parts['VARIABLE']['LMPA_PHPENV'])) {
 				$this->climate->error("Sorry you need to select a php version first for this app");
-				exit;
+				return;
 			}
 
 			$this->climate->out("Fetching parameters...");
@@ -226,7 +226,7 @@ class AppsController {
 			$this->climate->br();
 			$this->climate->out("Do you want to write change to: ".realpath($userIni)."?");
 			if(menu(["No", "Yes"]) == "0") {
-				exit;
+				return;
 			}
 
 			$userIniTxt = "";
@@ -241,12 +241,12 @@ class AppsController {
 		if($action == "2") {
 			if(!$lmpa_present) {
 				$this->climate->error("Sorry you need to select a php version first for this app");
-				exit;
+				return;
 			}
 
 			$this->climate->out("Are your sure you want to restore to the defalut laragon php config?");
 			if(menu(["No", "Yes"]) == "0") {
-				exit;
+				return;
 			}
 
 			$this->climate->out("Check for current .user.ini in the app");

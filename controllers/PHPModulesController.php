@@ -23,7 +23,7 @@ class PHPModulesController {
 
 			if(empty($versions)) {
 				$this->climate->yellow("No versions...");
-				exit;
+				return;
 			}
 
 			foreach($versions as $n => $version) {

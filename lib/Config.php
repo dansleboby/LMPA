@@ -7,9 +7,14 @@ class Config
     private const FILE = 'lmpa.json';
     private array $data = [];
 
+    private function filePath(): string
+    {
+        return APP_DIRECTORY . DIRECTORY_SEPARATOR . self::FILE;
+    }
+
     public function __construct()
     {
-        $file = path(self::FILE);
+        $file = $this->filePath();
         if (file_exists($file)) {
             $this->data = json_decode(file_get_contents($file), true) ?? [];
         }
@@ -29,7 +34,7 @@ class Config
     public function save(): bool
     {
         return (bool) file_put_contents(
-            path(self::FILE),
+            $this->filePath(),
             json_encode($this->data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)
         );
     }

@@ -28,24 +28,32 @@ $climate->out("
 
 $climate->border();
 
-$main = menu([
-		 'Manage PHP versions',
-		 'Manage PHP extensions (imagick, yaml, Xdebug, redis, APCu, memcached, mongodb etc...)',
-		 'Manage PHP modules (curl, exif, gettext, intl, gmp, mysqli, pdo, ftp etc...)',
-		 'Manage vhosts',
-		 'Settings',
-		 'Initial Setup'
-	 ]);
+while(true) {
+	$main = menu([
+			 'Manage PHP versions',
+			 'Manage PHP extensions (imagick, yaml, Xdebug, redis, APCu, memcached, mongodb etc...)',
+			 'Manage PHP modules (curl, exif, gettext, intl, gmp, mysqli, pdo, ftp etc...)',
+			 'Manage vhosts',
+			 'Settings',
+			 'Initial Setup',
+			 'Exit'
+		 ]);
 
-if($main === "0")
-	new \Controller\PHPVersionsController($climate);
-if($main === "1")
-	new \Controller\PHPExtensionsController($climate);
-if($main === "2")
-	new \Controller\PHPModulesController($climate);
-if($main === "3")
-	new \Controller\AppsController($climate);
-if($main === "4")
-	new \Controller\SettingsController($climate);
-if($main === "5")
-	new \Controller\SetupController($climate);
+	if($main === "6") break;
+
+	if($main === "0")
+		new \Controller\PHPVersionsController($climate);
+	if($main === "1")
+		new \Controller\PHPExtensionsController($climate);
+	if($main === "2")
+		new \Controller\PHPModulesController($climate);
+	if($main === "3")
+		new \Controller\AppsController($climate);
+	if($main === "4")
+		new \Controller\SettingsController($climate);
+	if($main === "5")
+		new \Controller\SetupController($climate);
+
+	$climate->br();
+	$climate->border();
+}

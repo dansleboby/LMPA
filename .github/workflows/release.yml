@@ -1,0 +1,67 @@
+name: Build and Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: curl, zip, json, dom, phar
+          ini-values: phar.readonly=0
+
+      - name: Install dependencies
+        run: composer install --no-dev --optimize-autoloader --no-interaction
+
+      - name: Download Box
+        run: |
+          curl -LSs https://github.com/box-project/box/releases/latest/download/box.phar -o box.phar
+          chmod +x box.phar
+
+      - name: Extract version from tag
+        id: version
+        run: echo "version=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+
+      - name: Update version in index.php
+        run: sed -i "s/const LMPA_VERSION = '.*'/const LMPA_VERSION = '${{ steps.version.outputs.version }}'/" index.php
+
+      - name: Build phar
+        run: php box.phar compile
+
+      - name: Create release zip
+        run: |
+          mkdir -p release/LMPA
+          cp index.phar release/LMPA/index.phar
+          cp LMPA.lnk release/LMPA/LMPA.lnk
+          cp manager.ps1 release/LMPA/manager.ps1
+          cp mod_fcgid.so release/LMPA/mod_fcgid.so
+          cp README.md release/LMPA/README.md
+          cp LICENSE.md release/LMPA/LICENSE.md
+          cd release && zip -r ../LMPA-${{ steps.version.outputs.version }}.zip LMPA/
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: LMPA v${{ steps.version.outputs.version }}
+          body: |
+            ## LMPA v${{ steps.version.outputs.version }}
+
+            ### Installation
+            1. Extract `LMPA-${{ steps.version.outputs.version }}.zip` into `C:\laragon\etc\apps\LMPA`
+            2. Double click on LMPA shortcut to run
+            3. Run Initial Setup on first use
+          files: LMPA-${{ steps.version.outputs.version }}.zip
+          generate_release_notes: true

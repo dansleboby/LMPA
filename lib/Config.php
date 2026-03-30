@@ -9,7 +9,8 @@ class Config
 
     private function filePath(): string
     {
-        return APP_DIRECTORY . DIRECTORY_SEPARATOR . self::FILE;
+        $dir = \Phar::running() ? dirname(\Phar::running(false)) : APP_DIRECTORY;
+        return $dir . DIRECTORY_SEPARATOR . self::FILE;
     }
 
     public function __construct()

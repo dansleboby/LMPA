@@ -15,7 +15,7 @@ function exeparser_fileversion($file) {
 		$version = file_get_contents($file);
 		$version = explode($parser_model['begin'], $version);
 		$version = explode($parser_model['end'], $version[1]);
-		$version = str_replace("\x00", null, $version[1]);
+		$version = str_replace("\x00", '', $version[1]);
 		return ((!empty($version) ? $version : false));
 	} else {
 		print "\x1b[31m" . (is_dir($file) ? "Specified path points to a directory, not a file." : "The specified path to the file may not exist or is not a file at all.") . "\x1b[0m";

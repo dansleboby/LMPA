@@ -89,7 +89,7 @@ class PHPVersionsController {
 		$this->climate->clear();
 		$this->climate->out("Please wait, fetching from: windows.php.net");
 
-		$curl = new \Mervick\CurlHelper("https://windows.php.net/downloads/releases/releases.json");
+		$curl = new \Lib\HttpClient("https://windows.php.net/downloads/releases/releases.json");
 		$curl->setOptions([
 							CURLOPT_SSL_VERIFYHOST => false,
 							CURLOPT_SSL_VERIFYPEER => false
@@ -100,6 +100,10 @@ class PHPVersionsController {
 
 		if($content["status"] < 200 || $content["status"] >= 300) {
 			$this->climate->error("Failed to get windows releases");
+			$this->climate->error("HTTP Status: " . $content["status"]);
+			if(!empty($content["error"])) {
+				$this->climate->error("cURL error (" . $content["errno"] . "): " . $content["error"]);
+			}
 			die();
 		}
 		$last_releases = $content["data"];
@@ -159,7 +163,7 @@ class PHPVersionsController {
 		if($choice == "other") {
 			$this->climate->out("Please wait, we are fetching archives release...");
 			//All others versions
-			$curl = new \Mervick\CurlHelper("https://windows.php.net/downloads/releases/archives/");
+			$curl = new \Lib\HttpClient("https://windows.php.net/downloads/releases/archives/");
 			$curl->setOptions([
 								  CURLOPT_SSL_VERIFYHOST => false,
 								  CURLOPT_SSL_VERIFYPEER => false
@@ -168,7 +172,11 @@ class PHPVersionsController {
 			$content = $curl->exec();
 
 			if($content["status"] < 200 || $content["status"] >= 300) {
-				$this->climate->error("Failed to get windows releases");
+				$this->climate->error("Failed to get windows releases (archives)");
+				$this->climate->error("HTTP Status: " . $content["status"]);
+				if(!empty($content["error"])) {
+					$this->climate->error("cURL error (" . $content["errno"] . "): " . $content["error"]);
+				}
 				die();
 			}
 
@@ -201,7 +209,7 @@ class PHPVersionsController {
 
 		$this->climate->info("Start download\n");
 		$full_url = "https://windows.php.net/downloads/releases/" . $packages[$choice]["path"];
-		$curl = new \Mervick\CurlHelper($full_url);
+		$curl = new \Lib\HttpClient($full_url);
 		$curl->setOptions([
 							  CURLOPT_PROGRESSFUNCTION => 'curl_progress_bar',
 							  CURLOPT_SSL_VERIFYHOST => false,

@@ -1,11 +1,10 @@
 {
     "require": {
         "league/climate": "^3.7",
-        "mervick/curl-helper": "^2.2",
         "ext-curl": "*",
         "ext-zip": "*",
         "ext-json": "*",
-        "php": "^7.4|^8.0|^8.1",
+        "php": "^7.4|^8.0",
         "bugsnag/bugsnag": "^3.0"
     },
     "autoload": {

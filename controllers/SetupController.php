@@ -52,7 +52,7 @@ class SetupController {
 			$sha256 = explode(" ", file_get_contents("https://www.phpmyadmin.net/downloads/phpMyAdmin-latest-all-languages.zip.sha256"))[0];
 
 			$this->climate->info("Start download\n");
-			$curl = new \Mervick\CurlHelper($url);
+			$curl = new \Lib\HttpClient($url);
 			$curl->setOptions([
 								  CURLOPT_PROGRESSFUNCTION => 'curl_progress_bar',
 								  CURLOPT_SSL_VERIFYHOST   => false,

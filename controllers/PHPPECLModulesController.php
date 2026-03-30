@@ -88,7 +88,7 @@ class PHPPECLModulesController {
 
 			$this->climate->info("Start download\n");
 			$full_url = "https://windows.php.net/" . $possiblePackages[$myPackage][$myVersion];
-			$curl = new \Mervick\CurlHelper($full_url);
+			$curl = new \Lib\HttpClient($full_url);
 			$curl->setOptions([
 								  CURLOPT_PROGRESSFUNCTION => 'curl_progress_bar',
 								  CURLOPT_SSL_VERIFYHOST => false,

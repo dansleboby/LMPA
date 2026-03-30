@@ -2,7 +2,7 @@
 
 namespace Controller;
 
-use Mervick\CurlHelper;
+use Lib\HttpClient;
 
 class AppsController {
 	private $climate;
@@ -170,7 +170,7 @@ class AppsController {
 
 			$this->climate->out("Fetching parameters...");
 			//https://www.php.net/manual/en/ini.list.php
-			$curl = CurlHelper::factory("https://www.php.net/manual/en/ini.list.php")->setOptions([
+			$curl = HttpClient::factory("https://www.php.net/manual/en/ini.list.php")->setOptions([
 								  CURLOPT_SSL_VERIFYHOST => false,
 								  CURLOPT_SSL_VERIFYPEER => false
 							  ])->setUserAgent("Laragon MultiPHP per App v.".LMPA_VERSION);

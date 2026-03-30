@@ -3,7 +3,7 @@
 namespace Lib;
 
 use League\CLImate\CLImate;
-use Mervick\CurlHelper;
+use Lib\HttpClient;
 
 class PECL {
 	private CLImate $climate;
@@ -14,7 +14,7 @@ class PECL {
 	}
 
 	private function curl() {
-		return (new CurlHelper())->setOptions([
+		return (new HttpClient())->setOptions([
 												  CURLOPT_SSL_VERIFYHOST => false,
 												  CURLOPT_SSL_VERIFYPEER => false
 											  ])

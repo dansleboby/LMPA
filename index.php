@@ -1,5 +1,5 @@
 <?php
-const LMPA_VERSION = '0.6.0';
+const LMPA_VERSION = '0.6.1';
 define("APP_DIRECTORY", dirname(__FILE__));
 
 if(PHP_OS !== "WINNT") exit("Only work on windows");
@@ -14,6 +14,8 @@ $climate = new League\CLImate\CLImate;
 $climate->extend(['ctable' => \Lib\CompactTable::class]);
 $progress = $climate->progress(100);
 
+$updateAvailable = check_latest_version();
+
 while(true) {
 	$climate->clear();
 
@@ -26,6 +28,13 @@ while(true) {
 <red>╚══════╝</red><green>╚═╝     ╚═╝</green><yellow>╚═╝     </yellow><blue>╚═╝  ╚═╝</blue>
 
 <red>Laragon</red> <green>Multi</green><yellow>PHP</yellow> per <blue>App</blue> V: ". LMPA_VERSION);
+
+	if ($updateAvailable) {
+		$climate->yellow()->border('═', 58);
+		$climate->yellow("  Update available: " . LMPA_VERSION . " → " . $updateAvailable);
+		$climate->yellow("  https://github.com/dansleboby/LMPA/releases/latest");
+		$climate->yellow()->border('═', 58);
+	}
 
 	$climate->border();
 

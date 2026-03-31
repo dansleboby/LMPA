@@ -81,6 +81,19 @@ function path($path) {
 	return strlen(Phar::running()) > 0 ? 'phar://index.phar/'.$path : $path;
 }
 
+function check_latest_version() {
+	$result = \Lib\HttpClient::factory('https://api.github.com/repos/dansleboby/LMPA/releases/latest')
+		->setUserAgent('LMPA/' . LMPA_VERSION)
+		->setTimeout(2)
+		->setOptions([CURLOPT_CONNECTTIMEOUT => 2])
+		->exec();
+
+	if ($result['status'] !== 200 || empty($result['data']['tag_name'])) return null;
+
+	$latest = ltrim($result['data']['tag_name'], 'v');
+	return version_compare($latest, LMPA_VERSION, '>') ? $latest : null;
+}
+
 function scan_app_php_versions() {
 	$confs = array_filter(
 		glob("../../../etc/apache2/sites-enabled/*.conf", GLOB_BRACE),

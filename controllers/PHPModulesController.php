@@ -47,9 +47,8 @@ class PHPModulesController {
 			PHPIniController::write_ini($iniFile, $currentIni);
 
 			$this->climate->lightGreen("Done!");
-
 			$this->climate->br();
-			$this->climate->blink("Please reload/restart apache in Laragon!");
+			$this->climate->yellow("Please reload/restart Apache in Laragon!");
 			$this->climate->br();
 		}
 
@@ -60,7 +59,7 @@ class PHPModulesController {
 			PHPIniController::write_ini($iniFile, $currentIni);
 			$this->climate->lightGreen("Done!");
 			$this->climate->br();
-			$this->climate->blink("Please reload/restart apache in Laragon!");
+			$this->climate->yellow("Please reload/restart Apache in Laragon!");
 			$this->climate->br();
 		}
 	}

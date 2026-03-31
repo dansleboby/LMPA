@@ -53,9 +53,76 @@ class PHPVersionsController {
 		$this->climate->br();
 
 		$choice = $this->choosePHPVersion();
+		if ($choice === null) {
+			return;
+		}
 
-		//TODO: Check in vhosts for current usage
 		$directory = realpath("../../../bin/php/".substr($choice, 2)."-nts/");
+		if ($directory === false) {
+			$this->climate->error("Directory not found for $choice");
+			return;
+		}
+		$dir_normalized = str_replace(DIRECTORY_SEPARATOR, '/', rtrim($directory, DIRECTORY_SEPARATOR));
+
+		// Check if any apps use this version
+		$scan = scan_app_php_versions();
+		$affected_apps = $scan['managed'][$dir_normalized] ?? [];
+
+		if (!empty($affected_apps)) {
+			$this->climate->yellow("⚠ This version is used by:");
+			foreach ($affected_apps as $app) {
+				$this->climate->out("  - $app");
+			}
+			$this->climate->br();
+
+			// Build replacement options from other installed versions
+			$php_binaries = glob("../../../bin/php/*-nts/php.exe");
+			$replacements = [];
+			foreach ($php_binaries as $bin) {
+				$ver = exeparser_fileversion($bin);
+				$path = str_replace(DIRECTORY_SEPARATOR, '/', rtrim(dirname(realpath($bin)), DIRECTORY_SEPARATOR));
+				if ($path !== $dir_normalized) {
+					$replacements[] = ['version' => $ver, 'path' => $path];
+				}
+			}
+
+			if (empty($replacements)) {
+				$this->climate->error("No other PHP versions available as replacement. Install another version first.");
+				return;
+			}
+
+			$menu_items = array_map(function($r) { return "PHP " . $r['version']; }, $replacements);
+			$menu_items[] = "Cancel";
+
+			$this->climate->out("Choose a replacement version or cancel:");
+			$replacement_choice = menu($menu_items);
+
+			if ($replacement_choice == (string)(count($menu_items) - 1)) {
+				$this->climate->yellow("Cancelled.");
+				return;
+			}
+
+			$new_path = $replacements[$replacement_choice]['path'] . '/';
+
+			// Rewrite LMPA_PHPENV in each affected vhost config
+			$confs = glob("../../../etc/apache2/sites-enabled/*.conf", GLOB_BRACE);
+			foreach ($confs as $conf) {
+				$content = file_get_contents($conf);
+				if (strpos($content, $dir_normalized) !== false) {
+					$content = str_replace(
+						$dir_normalized . '/',
+						$new_path,
+						$content
+					);
+					file_put_contents($conf, $content);
+					$this->climate->out("Updated: " . basename($conf));
+				}
+			}
+			$this->climate->lightGreen("Vhost configs updated to PHP " . $replacements[$replacement_choice]['version']);
+			$this->climate->br();
+		}
+
+		// Proceed with deletion
 		removeDirectory($directory);
 		if(file_exists($directory)) {
 			$this->climate->error("Cannot delete the php versions");
@@ -83,6 +150,10 @@ class PHPVersionsController {
 		}
 
 		$this->climate->info("PHP " . $choice . " has been deleted");
+
+		$this->climate->br();
+		$this->climate->yellow("Please reload/restart Apache in Laragon!");
+		$this->climate->br();
 	}
 
 	private function add() {

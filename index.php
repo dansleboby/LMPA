@@ -1,5 +1,5 @@
 <?php
-const LMPA_VERSION = '0.4.0';
+const LMPA_VERSION = '0.6.0';
 define("APP_DIRECTORY", dirname(__FILE__));
 
 if(PHP_OS !== "WINNT") exit("Only work on windows");
@@ -14,9 +14,10 @@ $climate = new League\CLImate\CLImate;
 $climate->extend(['ctable' => \Lib\CompactTable::class]);
 $progress = $climate->progress(100);
 
-$climate->clear();
+while(true) {
+	$climate->clear();
 
-$climate->out("
+	$climate->out("
 <red>██╗     </red><green>███╗   ███╗</green><yellow>██████╗ </yellow><blue>█████╗  </blue>
 <red>██║     </red><green>████╗ ████║</green><yellow>██╔══██╗</yellow><blue>██╔══██╗</blue>
 <red>██║     </red><green>██╔████╔██║</green><yellow>██████╔╝</yellow><blue>███████║</blue>
@@ -26,10 +27,10 @@ $climate->out("
 
 <red>Laragon</red> <green>Multi</green><yellow>PHP</yellow> per <blue>App</blue> V: ". LMPA_VERSION);
 
-$climate->border();
+	$climate->border();
 
-while(true) {
 	$main = menu([
+			 'Status',
 			 'Manage PHP versions',
 			 'Manage PHP extensions (imagick, yaml, Xdebug, redis, APCu, memcached, mongodb etc...)',
 			 'Manage PHP modules (curl, exif, gettext, intl, gmp, mysqli, pdo, ftp etc...)',
@@ -39,21 +40,21 @@ while(true) {
 			 'Exit'
 		 ]);
 
-	if($main === "6") break;
+	if($main === "7") break;
 
 	if($main === "0")
-		new \Controller\PHPVersionsController($climate);
+		new \Controller\StatusController($climate);
 	if($main === "1")
-		new \Controller\PHPExtensionsController($climate);
+		new \Controller\PHPVersionsController($climate);
 	if($main === "2")
-		new \Controller\PHPModulesController($climate);
+		new \Controller\PHPExtensionsController($climate);
 	if($main === "3")
-		new \Controller\AppsController($climate);
+		new \Controller\PHPModulesController($climate);
 	if($main === "4")
-		new \Controller\SettingsController($climate);
+		new \Controller\AppsController($climate);
 	if($main === "5")
+		new \Controller\SettingsController($climate);
+	if($main === "6")
 		new \Controller\SetupController($climate);
 
-	$climate->br();
-	$climate->border();
 }

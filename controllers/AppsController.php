@@ -42,10 +42,10 @@ class AppsController {
 
 		$this->climate->clear();
 		$this->climate->out("All this settings are <red>PER</red> app, so the settings will not affect other app");
-		//TODO: Change ROOT
 		$actions = [
 			"Change PHP version",
 			"Change PHP ini settings",
+			"Change document root (ROOT)",
 			"Revert back to default"
 		];
 
@@ -155,7 +155,7 @@ class AppsController {
 			if(file_put_contents($chosen_app, $conf_file)) {
 				$this->climate->green("Config write!");
 				$this->climate->br();
-				$this->climate->blink("Please reload/restart apache in Laragon!");
+				$this->climate->yellow("Please reload/restart Apache in Laragon!");
 				$this->climate->br();
 			} else {
 				$this->climate->error("Error when writing config");
@@ -238,7 +238,57 @@ class AppsController {
 
 		}
 
-		if($action == "2") {
+		if($action == '2') {
+			// Read current ROOT
+			preg_match('/^define\s+ROOT\s+"([^"]+)"/m', $conf_file, $root_match);
+			$current_root = $root_match[1] ?? 'unknown';
+
+			$this->climate->out("Current document root: <bold>$current_root</bold>");
+			$this->climate->br();
+
+			// List subdirectories of the app's www folder to help the user pick
+			$app_name = substr(basename($chosen_app), 0, -5);
+			$www_base = realpath('../../../www/' . $app_name);
+			if($www_base) {
+				$www_base = str_replace(DIRECTORY_SEPARATOR, '/', $www_base);
+				$subdirs = array_filter(glob($www_base . '/*'), 'is_dir');
+				if(!empty($subdirs)) {
+					$this->climate->out("Subdirectories available:");
+					foreach($subdirs as $dir) {
+						$this->climate->lightCyan()->out('  ' . str_replace(DIRECTORY_SEPARATOR, '/', $dir));
+					}
+					$this->climate->br();
+				}
+			}
+
+			$new_root = $this->climate->lightGreen()
+				->input("Enter new ROOT path (or press Enter to keep current):")
+				->prompt();
+
+			if(empty(trim($new_root))) {
+				$this->climate->yellow("No change.");
+				return;
+			}
+
+			$new_root = str_replace('\\', '/', trim($new_root));
+
+			$conf_file = preg_replace(
+				'/^(define\s+ROOT\s+)"[^"]+"/m',
+				'$1"' . $new_root . '"',
+				$conf_file
+			);
+
+			if(file_put_contents($chosen_app, $conf_file)) {
+				$this->climate->green("ROOT updated to: $new_root");
+				$this->climate->br();
+				$this->climate->yellow("Please reload/restart Apache in Laragon!");
+				$this->climate->br();
+			} else {
+				$this->climate->error("Error when writing config");
+			}
+		}
+
+		if($action == "3") {
 			if(!$lmpa_present) {
 				$this->climate->error("Sorry you need to select a php version first for this app");
 				return;
@@ -263,7 +313,7 @@ class AppsController {
 			if(file_put_contents($chosen_app, $conf_file)) {
 				$this->climate->green("Config removed!");
 				$this->climate->br();
-				$this->climate->blink("Please reload/restart apache in Laragon!");
+				$this->climate->yellow("Please reload/restart Apache in Laragon!");
 				$this->climate->br();
 			} else {
 				$this->climate->error("Error when writing config");

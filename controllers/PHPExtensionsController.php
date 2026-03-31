@@ -177,7 +177,10 @@ class PHPExtensionsController
         $this->climate->out("Add extensions to ini");
         file_put_contents($iniFile, file_get_contents($iniFile) . PHP_EOL . "extension=$packageFilename");
 
-        $this->climate->lightGreen()->blink("Done!");
+        $this->climate->lightGreen("Done!");
+        $this->climate->br();
+        $this->climate->yellow("Please reload/restart Apache in Laragon!");
+        $this->climate->br();
     }
 
     private function remove(string $php_version, string $iniFile): void
@@ -209,6 +212,9 @@ class PHPExtensionsController
             return;
         }
 
-        $this->climate->lightGreen()->blink("Done!");
+        $this->climate->lightGreen("Done!");
+        $this->climate->br();
+        $this->climate->yellow("Please reload/restart Apache in Laragon!");
+        $this->climate->br();
     }
 }

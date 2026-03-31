@@ -80,3 +80,28 @@ function removeDirectory($path) {
 function path($path) {
 	return strlen(Phar::running()) > 0 ? 'phar://index.phar/'.$path : $path;
 }
+
+function scan_app_php_versions() {
+	$confs = array_filter(
+		glob("../../../etc/apache2/sites-enabled/*.conf", GLOB_BRACE),
+		function($v) { return basename($v) !== "00-default.conf"; }
+	);
+
+	$result = ['managed' => [], 'unmanaged' => []];
+
+	foreach ($confs as $conf) {
+		$app_name = substr(basename($conf), 0, -5);
+		$content = file_get_contents($conf);
+		if ($content === false) continue;
+
+		// Check for LMPA_PHPENV in VARIABLE markers
+		if (preg_match('/# --- LMPA_START_VARIABLE --- #.*?define\s+LMPA_PHPENV\s+"([^"]+)".*?# --- LMPA_END_VARIABLE --- #/s', $content, $m)) {
+			$phpenv = rtrim($m[1], '/');
+			$result['managed'][$phpenv][] = $app_name;
+		} else {
+			$result['unmanaged'][] = $app_name;
+		}
+	}
+
+	return $result;
+}
